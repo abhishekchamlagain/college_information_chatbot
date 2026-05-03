@@ -5,7 +5,7 @@
 
 // Global error handler to prevent widget from disappearing
 window.addEventListener('error', (e) => {
-    console.error('🚨 Global error caught:', e.error);
+    console.error(' Global error caught:', e.error);
     console.error('Stack:', e.error?.stack);
     e.preventDefault(); // Prevent default error handling
 });
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Verify all elements exist
         if (!chatButton || !chatWindow || !closeChatBtn || !chatInput || !sendButton || !chatMessages) {
-            console.error('❌ One or more chatbot elements not found!');
+            console.error(' One or more chatbot elements not found!');
             console.error('chatButton:', chatButton);
             console.error('chatWindow:', chatWindow);
             console.error('closeChatBtn:', closeChatBtn);
@@ -57,9 +57,9 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeEventListeners();
         restoreChatState();
         startProtection();
-        console.log('✅ Chatbot widget initialized successfully');
+        console.log(' Chatbot widget initialized successfully');
     } catch (error) {
-        console.error('❌ Error initializing chatbot:', error);
+        console.error(' Error initializing chatbot:', error);
     }
 });
 
@@ -74,7 +74,7 @@ function initializeEventListeners() {
                 e.stopPropagation();
                 toggleChat();
             } catch (error) {
-                console.error('❌ Error in chat button click:', error);
+                console.error(' Error in chat button click:', error);
             }
         });
         
@@ -83,7 +83,7 @@ function initializeEventListeners() {
                 e.stopPropagation();
                 closeChat();
             } catch (error) {
-                console.error('❌ Error in close button click:', error);
+                console.error(' Error in close button click:', error);
             }
         });
 
@@ -94,7 +94,7 @@ function initializeEventListeners() {
                 e.stopPropagation();
                 handleSendMessage();
             } catch (error) {
-                console.error('❌ Error in send button click:', error);
+                console.error(' Error in send button click:', error);
             }
         });
         
@@ -105,7 +105,7 @@ function initializeEventListeners() {
                     handleSendMessage();
                 }
             } catch (error) {
-                console.error('❌ Error in input keypress:', error);
+                console.error(' Error in input keypress:', error);
             }
         });
 
@@ -115,13 +115,13 @@ function initializeEventListeners() {
                 chatInput.style.height = 'auto';
                 chatInput.style.height = chatInput.scrollHeight + 'px';
             } catch (error) {
-                console.error('❌ Error in input resize:', error);
+                console.error(' Error in input resize:', error);
             }
         });
 
-        console.log('✅ Event listeners initialized');
+        console.log(' Event listeners initialized');
     } catch (error) {
-        console.error('❌ Error initializing event listeners:', error);
+        console.error(' Error initializing event listeners:', error);
     }
 }
 
@@ -136,7 +136,7 @@ function toggleChat() {
             openChat();
         }
     } catch (error) {
-        console.error('❌ Error toggling chat:', error);
+        console.error(' Error toggling chat:', error);
     }
 }
 
@@ -146,7 +146,7 @@ function toggleChat() {
 function openChat() {
     try {
         if (!chatWindow || !chatButton) {
-            console.error('❌ Chat elements not found when opening');
+            console.error(' Chat elements not found when opening');
             return;
         }
         
@@ -170,9 +170,9 @@ function openChat() {
             chatInput.focus();
         }
         
-        console.log('✅ Chat window opened (state saved)');
+        console.log(' Chat window opened (state saved)');
     } catch (error) {
-        console.error('❌ Error opening chat:', error);
+        console.error(' Error opening chat:', error);
     }
 }
 
@@ -182,7 +182,7 @@ function openChat() {
 function closeChat() {
     try {
         if (!chatWindow || !chatButton) {
-            console.error('❌ Chat elements not found when closing');
+            console.error(' Chat elements not found when closing');
             return;
         }
         
@@ -201,9 +201,9 @@ function closeChat() {
         // Save state to localStorage
         saveChatState(false);
         
-        console.log('✅ Chat window closed (state saved)');
+        console.log(' Chat window closed (state saved)');
     } catch (error) {
-        console.error('❌ Error closing chat:', error);
+        console.error(' Error closing chat:', error);
     }
 }
 
@@ -216,11 +216,11 @@ async function handleSendMessage() {
 
         // Validate message
         if (!message || isWaitingForResponse) {
-            console.log('⚠️ Message empty or already waiting for response');
+            console.log(' Message empty or already waiting for response');
             return;
         }
 
-        console.log('📤 Sending message:', message);
+        console.log(' Sending message:', message);
 
         // Clear input
         chatInput.value = '';
@@ -245,18 +245,18 @@ async function handleSendMessage() {
 
             // Add bot response
             if (response.success) {
-                console.log('✅ Got successful response:', response.response);
+                console.log(' Got successful response:', response.response);
                 setTimeout(() => {
                     addMessage(response.response, 'bot');
                 }, CONFIG.ANIMATION_DELAY);
             } else {
-                console.error('❌ API returned error:', response.error);
+                console.error(' API returned error:', response.error);
                 setTimeout(() => {
                     addMessage('Sorry, I encountered an error. Please try again.', 'bot');
                 }, CONFIG.ANIMATION_DELAY);
             }
         } catch (error) {
-            console.error('❌ Error sending message:', error);
+            console.error(' Error sending message:', error);
             console.error('Error details:', error.message, error.stack);
             removeTypingIndicator(typingId);
             setTimeout(() => {
@@ -271,7 +271,7 @@ async function handleSendMessage() {
             }
         }
     } catch (error) {
-        console.error('❌ Critical error in handleSendMessage:', error);
+        console.error(' Critical error in handleSendMessage:', error);
         console.error('Stack:', error.stack);
         // Try to recover
         isWaitingForResponse = false;
@@ -308,11 +308,11 @@ async function sendMessageToAPI(message) {
 function addMessage(text, sender) {
     try {
         if (!chatMessages) {
-            console.error('❌ Chat messages container not found!');
+            console.error(' Chat messages container not found!');
             return;
         }
 
-        console.log(`📝 Adding ${sender} message:`, text);
+        console.log(` Adding ${sender} message:`, text);
         
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}-message`;
@@ -336,12 +336,12 @@ function addMessage(text, sender) {
         messageDiv.appendChild(contentDiv);
         chatMessages.appendChild(messageDiv);
 
-        console.log(`✅ Message added. Total messages: ${chatMessages.children.length}`);
+        console.log(` Message added. Total messages: ${chatMessages.children.length}`);
 
         // Scroll to bottom
         scrollToBottom();
     } catch (error) {
-        console.error('❌ Error adding message:', error);
+        console.error(' Error adding message:', error);
         console.error('Stack:', error.stack);
     }
 }
@@ -391,7 +391,7 @@ function scrollToBottom() {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
     } catch (error) {
-        console.error('❌ Error scrolling to bottom:', error);
+        console.error(' Error scrolling to bottom:', error);
     }
 }
 
@@ -408,7 +408,7 @@ function setInputEnabled(enabled) {
             sendButton.disabled = !enabled;
         }
     } catch (error) {
-        console.error('❌ Error setting input enabled state:', error);
+        console.error(' Error setting input enabled state:', error);
     }
 }
 
@@ -434,9 +434,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 function saveChatState(isOpen) {
     try {
         localStorage.setItem('padmashree_chat_open', isOpen ? 'true' : 'false');
-        console.log(`💾 Chat state saved: ${isOpen ? 'open' : 'closed'}`);
+        console.log(` Chat state saved: ${isOpen ? 'open' : 'closed'}`);
     } catch (error) {
-        console.error('❌ Error saving chat state:', error);
+        console.error(' Error saving chat state:', error);
     }
 }
 
@@ -447,11 +447,11 @@ function restoreChatState() {
     try {
         const savedState = localStorage.getItem('padmashree_chat_open');
         if (savedState === 'true') {
-            console.log('🔄 Restoring chat state: open');
+            console.log(' Restoring chat state: open');
             setTimeout(() => openChat(), 100);
         }
     } catch (error) {
-        console.error('❌ Error restoring chat state:', error);
+        console.error(' Error restoring chat state:', error);
     }
 }
 
@@ -464,7 +464,7 @@ function startProtection() {
         protectionInterval = setInterval(() => {
             // If chat should be open but active class is missing, restore it
             if (isChatOpen && chatWindow && !chatWindow.classList.contains('active')) {
-                console.warn('⚠️ Chat window lost active class! Restoring...');
+                console.warn(' Chat window lost active class! Restoring...');
                 chatWindow.classList.add('active');
                 chatButton.classList.add('active');
                 
@@ -497,7 +497,7 @@ function startProtection() {
                     // If someone tries to remove active class while chat is open
                     if (target === chatWindow && mutation.attributeName === 'class') {
                         if (!chatWindow.classList.contains('active')) {
-                            console.warn('⚠️ Mutation detected: active class removed! Restoring...');
+                            console.warn(' Mutation detected: active class removed! Restoring...');
                             chatWindow.classList.add('active');
                         }
                     }
@@ -506,7 +506,7 @@ function startProtection() {
                     if (target.id === 'chatbot-container' && mutation.attributeName === 'style') {
                         const container = target;
                         if (container.style.display === 'none' || container.style.visibility === 'hidden') {
-                            console.warn('⚠️ Mutation detected: container hidden! Restoring...');
+                            console.warn(' Mutation detected: container hidden! Restoring...');
                             container.style.display = 'block';
                             container.style.visibility = 'visible';
                         }
@@ -531,9 +531,9 @@ function startProtection() {
             });
         }
         
-        console.log('🛡️ Protection mechanism started');
+        console.log(' Protection mechanism started');
     } catch (error) {
-        console.error('❌ Error starting protection:', error);
+        console.error(' Error starting protection:', error);
     }
 }
 
@@ -550,9 +550,9 @@ function stopProtection() {
             mutationObserver.disconnect();
             mutationObserver = null;
         }
-        console.log('🛡️ Protection mechanism stopped');
+        console.log(' Protection mechanism stopped');
     } catch (error) {
-        console.error('❌ Error stopping protection:', error);
+        console.error(' Error stopping protection:', error);
     }
 }
 
@@ -574,7 +574,7 @@ window.addEventListener('beforeunload', () => {
 });
 
 // Log initialization
-console.log('%c🎓 Padmashree College Chatbot', 'color: #1e40af; font-size: 16px; font-weight: bold;');
+console.log('%c Padmashree College Chatbot', 'color: #1e40af; font-size: 16px; font-weight: bold;');
 console.log('%cChatbot widget loaded successfully!', 'color: #10b981;');
 console.log('%cAPI URL:', 'color: #6b7280;', CONFIG.API_URL);
-console.log('%c🛡️ Anti-disappear protection: ENABLED', 'color: #ef4444; font-weight: bold;');
+console.log('%c Anti-disappear protection: ENABLED', 'color: #ef4444; font-weight: bold;');

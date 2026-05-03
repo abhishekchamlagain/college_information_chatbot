@@ -22,5 +22,21 @@
     "confidence": 0.03938802083333333,
     "method": "fallback",
     "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
+  },
+  {
+    "timestamp": "2026-05-03T20:20:19.092869",
+    "user_input": "do  you know abhishek?",
+    "predicted_intent": "about_college",
+    "confidence": 0.27152712433219706,
+    "method": "fallback",
+    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
+  },
+  {
+    "timestamp": "2026-05-03T20:42:44.265550",
+    "user_input": "ho bro",
+    "predicted_intent": "affiliation",
+    "confidence": 0.16352627568182887,
+    "method": "fallback",
+    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
   }
 ]

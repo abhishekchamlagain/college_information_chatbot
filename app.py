@@ -29,7 +29,7 @@ print("Loading model...")
 model        = pickle.load(open("model.pkl", "rb"))
 le           = pickle.load(open("le.pkl",    "rb"))
 intents_data = json.load(open("intents_final.json", "r", encoding="utf-8"))
-print(f"✅ Model loaded | Intents: {len(intents_data['intents'])}")
+print(f" Model loaded | Intents: {len(intents_data['intents'])}")
 
 # ══════════════════════════════════════════════════════════
 # PREPROCESSING PIPELINE (copied from notebook)
@@ -154,7 +154,7 @@ RULES = [
                    r"|helpline|call\s*college|college\s*number"
                    r"|college\s*phone|reach\s*us)",
         "tag": "contact",
-        "response": "📞 Phone: +977-1-4112252 / +977-1-4112403\n🌐 www.padmashreecollege.edu.np"
+        "response": "Phone: +977-1-4112252 / +977-1-4112403\n www.padmashreecollege.edu.np"
     },
 
     # ── Location ──────────────────────────────────────────
@@ -166,7 +166,7 @@ RULES = [
                    r"|where\s*is\s*padmashree\s*college"
                    r"|college\s*location|direction\s*to\s*college)",
         "tag": "location",
-        "response": "📍 Padmashree College, Tinkune, Kathmandu, Nepal. (GPO Box: 15252)"
+        "response": " Padmashree College, Tinkune, Kathmandu, Nepal. (GPO Box: 15252)"
     },
 
     # ── Website ───────────────────────────────────────────
@@ -176,7 +176,7 @@ RULES = [
                    r"|web\s*portal|website\s*link|college\s*site"
                    r"|online\s*portal)",
         "tag": "website",
-        "response": "🌐 Official website: www.padmashreecollege.edu.np"
+        "response": " Official website: www.padmashreecollege.edu.np"
     },
 
     # ── Ragging ───────────────────────────────────────────
@@ -187,7 +187,7 @@ RULES = [
                    r"|bullying|harassment\s*college"
                    r"|eve\s*teasing)\b",
         "tag": "ragging",
-        "response": "🚫 Padmashree has ZERO TOLERANCE against ragging."
+        "response": " Padmashree has ZERO TOLERANCE against ragging."
     },
 
     # ── Greeting ──────────────────────────────────────────
@@ -196,7 +196,7 @@ RULES = [
                    r"|good\s*morning|good\s*afternoon|good\s*evening"
                    r"|howdy|greetings|sup)[!\s?]*$",
         "tag": "greeting",
-        "response": "Hello! Welcome to Padmashree College 😊 How can I help you today?"
+        "response": "Hello! Welcome to Padmashree College  How can I help you today?"
     },
 
     # ── Goodbye — BEFORE thanks ───────────────────────────
@@ -205,7 +205,7 @@ RULES = [
                    r"|ok\s*bye|baii|later|good\s*night"
                    r"|farewell|tata)\b",
         "tag": "goodbye",
-        "response": "Goodbye! Best of luck! 🙏"
+        "response": "Goodbye! Best of luck! "
     },
 
     # ── Thanks ────────────────────────────────────────────
@@ -214,7 +214,7 @@ RULES = [
                    r"|thnx|thx|that\s*helped"
                    r"|appreciate|much\s*appreciated)\b",
         "tag": "thanks",
-        "response": "You're welcome! Feel free to ask anything 😊"
+        "response": "You're welcome! Feel free to ask anything "
     },
 
     # ── Office Hours ──────────────────────────────────────
@@ -352,14 +352,27 @@ def chat():
         if not msg:
             return jsonify({"success": False, "response": "Please type something!"})
 
+        # ─── DEBUG: Log incoming message ─────────────────────────────────
+        print("\n" + "─"*60)
+        print(f"USER MESSAGE: {msg}")
+        print("─"*60)
+
         result = get_response(msg, model, le, intents_data)
 
-        # Log fallbacks
+        # ─── DEBUG: Log bot response details ─────────────────────────────
+        print(f"BOT RESPONSE  : {result['response']}")
+        print(f"INTENT        : {result['intent']}")
+        print(f"CONFIDENCE    : {result['confidence']:.3f} ({result['confidence']*100:.1f}%)")
+        print(f"METHOD        : {result['method'].upper()}")
+        
         if result["method"] == "fallback":
+            print(f"FALLBACK LOGGED to fallback_queries.json")
             log_failed_query(msg, result["response"],
                            result["confidence"],
                            result["method"],
                            result["intent"])
+        
+        print("─"*60 + "\n")
 
         return jsonify({
             "success":    True,
@@ -370,7 +383,7 @@ def chat():
         })
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f" ERROR: {e}")
         return jsonify({
             "success":  False,
             "response": "Sorry, something went wrong. Please try again."

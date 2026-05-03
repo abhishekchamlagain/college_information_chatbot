@@ -6,96 +6,113 @@ This project integrates an AI-powered chatbot into the Padmashree College websit
 ## Project Structure
 
 ```
-FYP 2026/
-├── website/                    # Frontend files
-│   ├── index.html             # Main college website
-│   ├── css/
-│   │   └── style.css          # Styling for website and chatbot
-│   └── js/
-│       └── chatbot.js         # Chatbot widget functionality
+final/
+├── app.py                      # Flask API server (Main backend)
+├── model.pkl                   # Trained Naive Bayes model
+├── le.pkl                      # Label encoder for intents
+├── intents_final.json          # Intent definitions and responses
+├── fallback_queries.json       # Logged fallback/unmatched queries
+├── Padmashree_Chatbot_Iterative.ipynb  # Jupyter notebook (model training)
 │
-├── api/                       # Backend API
-│   └── app.py                 # Flask API server
-│
-├── src/                       # Chatbot source code
-│   ├── chatbot.py            # Main chatbot logic
-│   ├── model.py              # ML model handling
-│   └── ...                   # Other modules
-│
-├── models/                    # Trained models
-│   └── chatbot_model.pkl
-│
-└── config/                    # Configuration files
-    ├── intents_final.json
-    └── fallback_queries.json
+└── website/                    # Frontend files
+    ├── index.html              # Main college website
+    ├── test_chat.html          # Testing page for chatbot
+    ├── README.md               # This file
+    ├── css/
+    │   └── style.css           # Styling for website and chatbot
+    ├── js/
+    │   └── chatbot.js          # Chatbot widget functionality
+    └── images/                 # Website images
 ```
 
 ## Features
 
 ### Website Features
-- ✅ Modern, responsive design
-- ✅ Professional college layout with sections:
+-  Modern, responsive design
+-  Professional college layout with sections:
   - Hero section with call-to-action
   - About section with statistics
   - Courses/Programs showcase
   - Admissions information
   - Contact details
-- ✅ Mobile-friendly navigation
-- ✅ Smooth scrolling and animations
+-  Mobile-friendly navigation
+-  Smooth scrolling and animations
 
 ### Chatbot Features
-- ✅ Floating circular button (bottom-right corner)
-- ✅ Smooth expand/collapse animations
-- ✅ Real-time AI-powered responses
-- ✅ Chat history display
-- ✅ Typing indicators
-- ✅ Welcome message
-- ✅ Error handling
-- ✅ Responsive design
+-  Floating circular button (bottom-right corner)
+-  Smooth expand/collapse animations
+-  Real-time AI-powered responses
+-  Chat history display
+-  Typing indicators
+-  Welcome message
+-  Error handling
+-  Responsive design
 
 ## Installation & Setup
 
 ### Prerequisites
 - Python 3.8+
 - pip (Python package manager)
-- Modern web browser
+- Modern web browser (Chrome, Edge, Brave, Firefox)
+- Required Python packages: Flask, Flask-CORS, NLTK, scikit-learn, numpy
 
 ### Step 1: Install Dependencies
 
 ```bash
 # Install Python dependencies
-pip install -r requirements.txt
+pip install flask flask-cors nltk scikit-learn numpy pickle
 ```
 
-### Step 2: Start the Backend API Server
+### Step 2: Prepare NLTK Data
+
+The app.py automatically downloads required NLTK data on first run. Required packages:
+- `punkt` - Tokenizer
+- `wordnet` - Lemmatizer
+- `stopwords` - English stopwords
+- `omw-1.4` - Open Multilingual Wordnet
+
+### Step 3: Start the Backend API Server
+
+Navigate to the project root directory and run:
 
 ```bash
-# Navigate to project root
-cd "C:\Users\acer\OneDrive\Desktop\FYP II\FYP 2026"
+# Make sure you're in the main project directory
+cd "C:\Users\acer\OneDrive\Pictures\Padmashree college BIT\9th Semester\FYP 2\final"
 
 # Start the Flask API server
-python api/app.py
+python app.py
+```
+
+You should see output like:
+```
+==================================================
+  PADMASHREE COLLEGE CHATBOT API SERVER
+==================================================
+  Intents loaded : XX
+  Rules loaded   : XX
+  Threshold      : 0.30
+==================================================
+  Open: http://localhost:5000
+==================================================
 ```
 
 The API server will start on `http://localhost:5000`
 
-### Step 3: Open the Website
+### Step 4: Open the Website in Browser
 
-1. Navigate to the website folder:
-   ```
-   C:\Users\acer\OneDrive\Desktop\FYP II\FYP 2026\website\
-   ```
+**Option A: Direct File (Recommended for Testing)**
+1. Navigate to the website folder
+2. Open `index.html` directly in your browser
+3. The chatbot will automatically connect to `http://localhost:5000/chat`
 
-2. Open `index.html` in your web browser:
-   - Double-click the file, OR
-   - Right-click → Open with → Your browser, OR
-   - Use a local server (recommended for development):
-     ```bash
-     # Using Python's built-in server
-     cd website
-     python -m http.server 8000
-     ```
-     Then visit: `http://localhost:8000`
+**Option B: Using Local Web Server (Better for Development)**
+```bash
+cd website
+python -m http.server 8000
+```
+Then open: `http://localhost:8000` in your browser
+
+**Note:** When you run `python app.py`, clicking the `http://localhost:5000` link in the terminal will now open directly in your default browser (Chrome, Edge, or Brave).
 
 ## Usage
 
@@ -151,122 +168,283 @@ Send a message to the chatbot
 
 ## Customization
 
-### Changing Colors
-Edit `website/css/style.css` and modify the CSS variables:
-
-```css
-:root {
-    --primary-color: #1e40af;      /* Main blue color */
-    --secondary-color: #3b82f6;    /* Light blue */
-    --accent-color: #f59e0b;       /* Orange accent */
-}
-```
+### Changing Colors & Styling
+Edit `website/css/style.css` and modify the CSS variables or specific classes to customize:
+- Chatbot button colors
+- Chat window appearance
+- Font styles and sizes
+- Animation effects
 
 ### Modifying College Information
 Edit `website/index.html` to update:
-- College name
+- College name and branding
 - Contact information
 - Courses offered
 - About section content
 - Admissions details
+- Navigation links
 
 ### Updating Chatbot Responses
-Edit the training data and intents:
-- `config/intents_final.json` - Intent definitions
-- `config/fallback_queries.json` - Fallback responses
+The chatbot uses a **Hybrid Engine** with 3 layers:
 
-Then retrain the model:
-```bash
-python scripts/train_model.py
-```
+1. **Rule-Based Matching** (Fastest - Exact patterns):
+   - Edit the `RULES` list in `app.py`
+   - Add specific patterns for common questions
+   - Includes support for Roman Nepali text normalization
+
+2. **Naive Bayes Classification** (ML-based):
+   - Edit `intents_final.json` to add/modify intents
+   - Add new patterns and responses
+   - Retrain the model using the Jupyter notebook
+
+3. **Fallback Responses**:
+   - Logged to `fallback_queries.json`
+   - Use these to improve the chatbot
+   - Add patterns to `RULES` for frequently asked questions
+
+### Files to Edit:
+- `intents_final.json` - Intent definitions with patterns and responses
+- `app.py` - Rules engine and configuration
+- `fallback_queries.json` - Review unmatched queries to improve responses
 
 ## Troubleshooting
 
 ### Chatbot not responding
+
 1. **Check if API server is running:**
    ```bash
-   python api/app.py
+   python app.py
    ```
-   You should see: "PADMASHREE COLLEGE CHATBOT API SERVER"
+   You should see:
+   ```
+   PADMASHREE COLLEGE CHATBOT API SERVER
+   Intents loaded : [number]
+   Rules loaded   : [number]
+   ```
 
-2. **Check browser console** (F12):
-   - Look for error messages
-   - Verify API URL is correct (`http://localhost:5000/chat`)
+2. **Verify Flask is installed:**
+   ```bash
+   pip install flask flask-cors
+   ```
 
-3. **Check CORS**: Make sure `flask-cors` is installed
+3. **Check browser console** (Press F12):
+   - Open Console tab
+   - Look for error messages (e.g., network errors)
+   - Verify API URL: `http://localhost:5000/chat`
+
+4. **Test API manually:**
+   ```bash
+   # Using curl (Windows PowerShell)
+   $body = @{message='hello'} | ConvertTo-Json
+   Invoke-WebRequest -Uri "http://localhost:5000/chat" -Method POST -Body $body -ContentType "application/json"
+   ```
 
 ### Chat window not appearing
-1. **Clear browser cache** (Ctrl + Shift + Delete)
-2. **Check JavaScript console** for errors (F12)
-3. **Verify files are in correct locations**
 
-### Styling issues
-1. **Check if CSS file is loaded**: Open browser DevTools → Network tab
-2. **Verify CSS file path** in `index.html`
-3. **Try hard refresh**: Ctrl + Shift + R
+1. **Check if chatbot.js is loaded:**
+   - Press F12 → Network tab
+   - Refresh page
+   - Look for `chatbot.js` - should have status 200
+   - Check console for JavaScript errors
+
+2. **Verify JavaScript path** in `index.html`:
+   - Should point to: `js/chatbot.js`
+
+3. **Clear browser cache:**
+   - Press `Ctrl + Shift + Delete`
+   - Clear all browsing data
+   - Restart browser
+
+### Model or Data Loading Errors
+
+1. **Missing model files:**
+   - Ensure `model.pkl` and `le.pkl` are in the main directory
+   - Run `Padmashree_Chatbot_Iterative.ipynb` to retrain model
+
+2. **JSON parsing errors:**
+   - Verify `intents_final.json` is valid JSON
+   - Check for syntax errors (missing commas, quotes)
+   - Use online JSON validator
+
+3. **NLTK data errors:**
+   - App automatically downloads on first run
+   - If fails, manually download:
+     ```python
+     import nltk
+     nltk.download('punkt')
+     nltk.download('wordnet')
+     nltk.download('stopwords')
+     nltk.download('omw-1.4')
+     ```
+
+### Port Already in Use
+
+If you get `Address already in use` error:
+
+```bash
+# Find and kill process using port 5000
+# Windows PowerShell:
+Get-Process | Where-Object {$_.Handles -match "5000"}
+
+# Or just change port in app.py:
+app.run(debug=True, host="0.0.0.0", port=5001)  # Use 5001 instead
+```
+
+### Styling Issues
+
+1. **CSS file not loading:**
+   - Press F12 → Network tab
+   - Verify `style.css` loads (status 200)
+   - Check file path: `css/style.css`
+
+2. **Try hard refresh:**
+   - `Ctrl + Shift + R` (Windows/Linux)
+   - `Cmd + Shift + R` (Mac)
 
 ## Development
 
-### Running in Development Mode
+### Quick Start for Development
 
-1. **Backend (with auto-reload):**
-   ```bash
-   python api/app.py
-   ```
-   Flask runs in debug mode by default
-
-2. **Frontend (with live server):**
-   ```bash
-   cd website
-   python -m http.server 8000
-   ```
-
-### Testing the API
-
-Using curl:
+**Terminal 1: Run Backend**
 ```bash
-curl -X POST http://localhost:5000/chat \
-  -H "Content-Type: application/json" \
-  -d "{\"message\":\"Hello\"}"
+cd final/
+python app.py
 ```
 
-Using Python:
+**Terminal 2: Serve Frontend (Optional)**
+```bash
+cd final/website
+python -m http.server 8000
+```
+
+**Browser:**
+- Visit `http://localhost:8000` (or open `index.html` directly)
+- Open F12 Developer Tools to see console logs and network requests
+
+### Testing the Chatbot API
+
+**Using curl (Windows PowerShell):**
+```powershell
+$body = @{message='What courses do you offer?'} | ConvertTo-Json
+Invoke-WebRequest -Uri "http://localhost:5000/chat" -Method POST -Body $body -ContentType "application/json" | ConvertTo-Json
+```
+
+**Using Python:**
 ```python
 import requests
+import json
 
 response = requests.post('http://localhost:5000/chat', 
     json={'message': 'What courses do you offer?'})
-print(response.json())
+print(json.dumps(response.json(), indent=2))
 ```
+
+### Chatbot Response Layers
+
+The hybrid chatbot engine prioritizes responses:
+
+1. **Rule-Based** (Highest Priority) - Fastest, most accurate for known patterns
+2. **Naive Bayes ML** (Medium Priority) - Flexible learning-based classification
+3. **Confidence Gate** (Quality Control) - Rejects low-confidence predictions
+4. **Fallback** (Safety Net) - Logs unknown queries for improvement
 
 ## Deployment
 
 ### For Production Deployment:
 
-1. **Backend:**
-   - Use a production WSGI server (Gunicorn, uWSGI)
-   - Set `debug=False` in `app.py`
-   - Use environment variables for configuration
-   - Set up proper logging
+**Backend:**
+1. Install production WSGI server:
+   ```bash
+   pip install gunicorn
+   ```
 
-2. **Frontend:**
-   - Host on a web server (Apache, Nginx)
-   - Update API URL in `chatbot.js` to production URL
-   - Minify CSS and JavaScript
-   - Optimize images
+2. Update `app.py`:
+   ```python
+   if __name__ == "__main__":
+       app.run(debug=False, host="0.0.0.0", port=5000)  # Set debug=False
+   ```
 
-3. **Security:**
-   - Enable HTTPS
-   - Add rate limiting
-   - Implement input validation
-   - Set up proper CORS policies
+3. Run with Gunicorn:
+   ```bash
+   gunicorn -w 4 -b 0.0.0.0:5000 app:app
+   ```
 
-## Support
+**Frontend:**
+1. Host on web server (IIS, Apache, Nginx, or cloud platform)
+2. Update chatbot API URL in `website/js/chatbot.js` if needed:
+   ```javascript
+   const API_URL = "https://your-production-domain.com/chat";
+   ```
+3. Minify CSS and JavaScript for production
+4. Optimize images
 
-For issues or questions:
-- Check the documentation in `/docs` folder
-- Review the implementation notes
-- Check the project structure documentation
+**Security Considerations:**
+-  Set `debug=False` in Flask
+-  Enable HTTPS/SSL certificates
+-  Implement rate limiting on `/chat` endpoint
+-  Add input validation and sanitization
+-  Use environment variables for sensitive config
+-  Implement proper CORS policies
+-  Add request logging and monitoring
+-  Regular security updates for dependencies
+
+### Deployment Options:
+- **Local/On-premise:** Windows Server or Linux Server
+- **Cloud:** Heroku, PythonAnywhere, AWS, Azure, Google Cloud
+- **Containerized:** Docker + Docker Compose for scalability
+
+## Features Summary
+
+### Core Chatbot Features
+-  **Hybrid Engine** - Rule-based + Machine Learning classification
+-  **Nepali Language Support** - Roman Nepali text normalization  
+-  **Intent Recognition** - Custom intents from `intents_final.json`
+-  **Confidence Scoring** - Rejects low-confidence responses
+-  **Query Logging** - Saves unmatched queries to `fallback_queries.json`
+-  **Chat History** - Maintains conversation context
+-  **Typing Indicators** - Shows bot is thinking
+-  **Error Handling** - Graceful fallback responses
+-  **CORS Support** - Safe cross-origin requests
+-  **Real-time Responses** - AJAX-powered chat
+
+### Website Features
+-  Modern, responsive design
+-  Mobile-friendly interface
+-  Floating chatbot widget
+-  Smooth animations
+-  Professional college layout
+
+## File Reference
+
+| File | Purpose |
+|------|---------|
+| `app.py` | Main Flask backend server with hybrid chatbot engine |
+| `model.pkl` | Trained Naive Bayes classifier |
+| `le.pkl` | Label encoder for intent classification |
+| `intents_final.json` | Intent definitions, patterns, and responses |
+| `fallback_queries.json` | Log of unmatched user queries for improvement |
+| `website/index.html` | Main website landing page |
+| `website/chatbot.js` | Frontend chatbot widget logic |
+| `website/style.css` | Website and chatbot styling |
+| `Padmashree_Chatbot_Iterative.ipynb` | Jupyter notebook for model training/retraining |
+
+## Support & Resources
+
+**For Issues:**
+1. Check the Troubleshooting section above
+2. Review `fallback_queries.json` for unmatched patterns
+3. Check browser console (F12) for JavaScript errors
+4. Check terminal output for Python/Flask errors
+
+**To Improve Chatbot:**
+1. Review `fallback_queries.json` periodically
+2. Add new patterns to `RULES` in `app.py` for common questions
+3. Update `intents_final.json` with new intents
+4. Retrain model using `Padmashree_Chatbot_Iterative.ipynb`
+
+**Contact & Contribution:**
+- For college-specific questions: Contact Padmashree College
+- For chatbot improvements: Review the Jupyter notebook for model details
 
 ## Technologies Used
 
