@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-chat {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .bot-message {
+            align-items: flex-start;
+        }
+        .user-message {
+            align-items: flex-end;
+        }
+        .message-content {
+            max-width: 80%;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            word-wrap: break-word;
+            display: inline-block;
+        }
+        .bot-message .message-content {
+            background: white;
+            color: #1f2937;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .user-message .message-content {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: white;
+            box-shadow: 0 2px 4px rgba(30, 64, 175, 0.3);
+        }
+        .message-content p {
+            margin: 0;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            border: none;
+            background: #1e40af;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1e3a8a;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chatbot Message Display Test</h1>
+    <p>This tests if bot messages are visible with the updated CSS</p>
+    
+    <div class="test-chat" id="testMessages">
+        <!-- Messages will appear here -->
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <button onclick="addTestUserMessage()">Add User Message</button>
+        <button onclick="addTestBotMessage()">Add Bot Message</button>
+        <button onclick="clearMessages()">Clear All</button>
+    </div>
+
+    <script>
+        const testMessages = document.getElementById('testMessages');
+
+        function addTestUserMessage() {
+            const msg = document.createElement('div');
+            msg.className = 'message user-message';
+            msg.innerHTML = `
+                <div class="message-content">
+                    <p>This is a user message. Can you see this?</p>
+                </div>
+            `;
+            testMessages.appendChild(msg);
+        }
+
+        function addTestBotMessage() {
+            const msg = document.createElement('div');
+            msg.className = 'message bot-message';
+            msg.innerHTML = `
+                <div class="message-content">
+                    <p>This is a bot message. It should be visible with white background and border!</p>
+                </div>
+            `;
+            testMessages.appendChild(msg);
+        }
+
+        function clearMessages() {
+            testMessages.innerHTML = '';
+        }
+
+        // Add some initial messages
+        window.addEventListener('DOMContentLoaded', () => {
+            addTestBotMessage();
+            addTestUserMessage();
+            addTestBotMessage();
+        });
+    </script>
+</body>
+</html>

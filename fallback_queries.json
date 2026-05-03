@@ -1,0 +1,26 @@
+[
+  {
+    "timestamp": "2026-05-03T17:59:31.053640",
+    "user_input": "debug",
+    "predicted_intent": "facilities",
+    "confidence": 0.03938802083333333,
+    "method": "fallback",
+    "bot_response": "I'm not sure. Could you rephrase or call +977-1-4112252."
+  },
+  {
+    "timestamp": "2026-05-03T18:36:17.185400",
+    "user_input": "debug",
+    "predicted_intent": "facilities",
+    "confidence": 0.03938802083333333,
+    "method": "fallback",
+    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
+  },
+  {
+    "timestamp": "2026-05-03T18:37:31.047481",
+    "user_input": "asrtdyftuktjyhrgefeadwefsrgdth",
+    "predicted_intent": "facilities",
+    "confidence": 0.03938802083333333,
+    "method": "fallback",
+    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
+  }
+]
