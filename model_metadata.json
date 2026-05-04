@@ -1,0 +1,29 @@
+{
+  "accuracy": 0.9081225033288948,
+  "test_accuracy": 0.9081225033288948,
+  "train_accuracy": 0.8802863802863803,
+  "model_type": "Naive Bayes (Real Balanced Data)",
+  "dataset_improvements": [
+    "Removed 221 duplicate patterns across intents",
+    "Added 8 new real intent categories from Padmashree website",
+    "Balanced dataset to 82.6 patterns per class (target 80)",
+    "Total intents: 90 (87 original + 3 new)",
+    "Total unique patterns: 3,834 (all real, no synthetic data)"
+  ],
+  "dataset_statistics": {
+    "total_intents": 90,
+    "total_patterns": 7508,
+    "avg_patterns_per_class": 83.4,
+    "min_patterns": 79,
+    "max_patterns": 143
+  },
+  "total_rules": 12,
+  "confidence_threshold": 0.3,
+  "timestamp": "2026-05-03T23:47:11.241340",
+  "improvements_from_original": {
+    "original_accuracy": 0.6618985695708712,
+    "new_accuracy": 0.9081225033288948,
+    "accuracy_change": 0.24622393375802354,
+    "overfitting_gap_reduction": 0.3333361230425145
+  }
+}

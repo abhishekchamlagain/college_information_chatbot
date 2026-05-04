@@ -29,7 +29,21 @@ print("Loading model...")
 model        = pickle.load(open("model.pkl", "rb"))
 le           = pickle.load(open("le.pkl",    "rb"))
 intents_data = json.load(open("intents_final.json", "r", encoding="utf-8"))
-print(f" Model loaded | Intents: {len(intents_data['intents'])}")
+
+# Fetch Model Accuracy from metadata file
+MODEL_ACCURACY = 0.0
+try:
+    # Try to load accuracy from model_metadata.json (saved during training)
+    if os.path.exists("model_metadata.json"):
+        metadata = json.load(open("model_metadata.json", "r", encoding="utf-8"))
+        MODEL_ACCURACY = metadata.get("accuracy", 0.0)
+    else:
+        print("Note: model_metadata.json not found. Run notebook to generate it.")
+except Exception as e:
+    print(f"Could not load accuracy: {e}")
+    MODEL_ACCURACY = 0.0
+
+print(f"Model loaded | Intents: {len(intents_data['intents'])}")
 
 # ══════════════════════════════════════════════════════════
 # PREPROCESSING PIPELINE (copied from notebook)
@@ -399,6 +413,7 @@ if __name__ == "__main__":
     print("="*50)
     print(f"  Intents loaded : {len(intents_data['intents'])}")
     print(f"  Rules loaded   : {len(RULES)}")
+    print(f"  Model Accuracy : {MODEL_ACCURACY*100:.1f}%")
     print(f"  Threshold      : {CONFIDENCE_THRESHOLD}")
     print("="*50)
     print("  Open: http://localhost:5000")
