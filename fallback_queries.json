@@ -1,89 +1,25 @@
 [
   {
-    "timestamp": "2026-05-03T17:59:31.053640",
-    "user_input": "debug",
-    "predicted_intent": "facilities",
-    "confidence": 0.03938802083333333,
-    "method": "fallback",
-    "bot_response": "I'm not sure. Could you rephrase or call +977-1-4112252."
-  },
-  {
-    "timestamp": "2026-05-03T18:36:17.185400",
-    "user_input": "debug",
-    "predicted_intent": "facilities",
-    "confidence": 0.03938802083333333,
-    "method": "fallback",
-    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
-  },
-  {
-    "timestamp": "2026-05-03T18:37:31.047481",
-    "user_input": "asrtdyftuktjyhrgefeadwefsrgdth",
-    "predicted_intent": "facilities",
-    "confidence": 0.03938802083333333,
-    "method": "fallback",
-    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
-  },
-  {
-    "timestamp": "2026-05-03T20:20:19.092869",
-    "user_input": "do  you know abhishek?",
+    "timestamp": "2026-05-18T00:28:57.578144",
+    "user_input": "about college",
     "predicted_intent": "about_college",
-    "confidence": 0.27152712433219706,
+    "confidence": 0.1632529831703619,
     "method": "fallback",
     "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
   },
   {
-    "timestamp": "2026-05-03T20:42:44.265550",
-    "user_input": "ho bro",
-    "predicted_intent": "affiliation",
-    "confidence": 0.16352627568182887,
+    "timestamp": "2026-05-18T00:33:35.970353",
+    "user_input": "about college",
+    "predicted_intent": "about_college",
+    "confidence": 0.27324640207895795,
     "method": "fallback",
     "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
   },
   {
-    "timestamp": "2026-05-05T10:54:53.383695",
-    "user_input": "kxa khaber",
-    "predicted_intent": "facilities",
-    "confidence": 0.01904635055940331,
-    "method": "fallback",
-    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
-  },
-  {
-    "timestamp": "2026-05-05T10:54:59.613230",
-    "user_input": "how are you",
-    "predicted_intent": "admission",
-    "confidence": 0.02626852718167208,
-    "method": "fallback",
-    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
-  },
-  {
-    "timestamp": "2026-05-05T10:55:12.714057",
-    "user_input": "BIT lecturers",
-    "predicted_intent": "vacancy",
-    "confidence": 0.2000705817802154,
-    "method": "fallback",
-    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
-  },
-  {
-    "timestamp": "2026-05-05T10:55:16.278656",
-    "user_input": "BIT",
-    "predicted_intent": "BTech_career",
-    "confidence": 0.12707296551487873,
-    "method": "fallback",
-    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
-  },
-  {
-    "timestamp": "2026-05-05T10:55:22.344817",
-    "user_input": "bit course",
-    "predicted_intent": "BTech_Food",
-    "confidence": 0.22759725384285937,
-    "method": "fallback",
-    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
-  },
-  {
-    "timestamp": "2026-05-05T10:55:44.248847",
-    "user_input": "hi bro",
-    "predicted_intent": "greeting",
-    "confidence": 0.12600701142166365,
+    "timestamp": "2026-05-18T00:37:41.556245",
+    "user_input": "about college",
+    "predicted_intent": "about_college",
+    "confidence": 0.27324640207895795,
     "method": "fallback",
     "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
   }
