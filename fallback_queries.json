@@ -38,5 +38,53 @@
     "confidence": 0.16352627568182887,
     "method": "fallback",
     "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
+  },
+  {
+    "timestamp": "2026-05-05T10:54:53.383695",
+    "user_input": "kxa khaber",
+    "predicted_intent": "facilities",
+    "confidence": 0.01904635055940331,
+    "method": "fallback",
+    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
+  },
+  {
+    "timestamp": "2026-05-05T10:54:59.613230",
+    "user_input": "how are you",
+    "predicted_intent": "admission",
+    "confidence": 0.02626852718167208,
+    "method": "fallback",
+    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
+  },
+  {
+    "timestamp": "2026-05-05T10:55:12.714057",
+    "user_input": "BIT lecturers",
+    "predicted_intent": "vacancy",
+    "confidence": 0.2000705817802154,
+    "method": "fallback",
+    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
+  },
+  {
+    "timestamp": "2026-05-05T10:55:16.278656",
+    "user_input": "BIT",
+    "predicted_intent": "BTech_career",
+    "confidence": 0.12707296551487873,
+    "method": "fallback",
+    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
+  },
+  {
+    "timestamp": "2026-05-05T10:55:22.344817",
+    "user_input": "bit course",
+    "predicted_intent": "BTech_Food",
+    "confidence": 0.22759725384285937,
+    "method": "fallback",
+    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
+  },
+  {
+    "timestamp": "2026-05-05T10:55:44.248847",
+    "user_input": "hi bro",
+    "predicted_intent": "greeting",
+    "confidence": 0.12600701142166365,
+    "method": "fallback",
+    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
   }
 ]
