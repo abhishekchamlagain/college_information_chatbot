@@ -22,5 +22,13 @@
     "confidence": 0.27324640207895795,
     "method": "fallback",
     "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
+  },
+  {
+    "timestamp": "2026-06-03T12:50:42.217112",
+    "user_input": "about college",
+    "predicted_intent": "about_college",
+    "confidence": 0.16606562522887733,
+    "method": "fallback",
+    "bot_response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?"
   }
 ]
