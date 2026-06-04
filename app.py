@@ -9,6 +9,7 @@ from flask_cors import CORS
 import pickle, json, re, random, os, nltk
 from datetime import datetime
 import numpy as np
+import tensorflow as tf
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 
@@ -18,35 +19,33 @@ for pkg in ["punkt", "wordnet", "stopwords", "omw-1.4"]:
 
 # ── Flask App ─────────────────────────────────────────────
 app = Flask(__name__,
-            template_folder="website",   # your website folder
-            static_folder="website",     # serves css/js/images
-            static_url_path="")          # keeps original paths
+            template_folder="website",
+            static_folder="website",
+            static_url_path="")
+CORS(app)
 
-CORS(app)  # allows frontend to call API
-
-# ── Load Model ────────────────────────────────────────────
+# ── Load Model (Keras) ────────────────────────────────────
 print("Loading model...")
-model        = pickle.load(open("model.pkl", "rb"))
-le           = pickle.load(open("le.pkl",    "rb"))
+keras_model  = tf.keras.models.load_model("chatbot_model.keras")  # ← Keras
+vectorizer   = pickle.load(open("vectorizer.pkl", "rb"))           # ← TF-IDF
+le           = pickle.load(open("le.pkl",         "rb"))           # ← LabelEncoder
 intents_data = json.load(open("intents_final.json", "r", encoding="utf-8"))
 
 # Fetch Model Accuracy from metadata file
 MODEL_ACCURACY = 0.0
 try:
-    # Try to load accuracy from model_metadata.json (saved during training)
     if os.path.exists("model_metadata.json"):
-        metadata = json.load(open("model_metadata.json", "r", encoding="utf-8"))
+        metadata       = json.load(open("model_metadata.json", "r", encoding="utf-8"))
         MODEL_ACCURACY = metadata.get("accuracy", 0.0)
     else:
         print("Note: model_metadata.json not found. Run notebook to generate it.")
 except Exception as e:
     print(f"Could not load accuracy: {e}")
-    MODEL_ACCURACY = 0.0
 
 print(f"Model loaded | Intents: {len(intents_data['intents'])}")
 
 # ══════════════════════════════════════════════════════════
-# PREPROCESSING PIPELINE (copied from notebook)
+# PREPROCESSING PIPELINE (same as notebook)
 # ══════════════════════════════════════════════════════════
 
 lemmatizer = WordNetLemmatizer()
@@ -144,24 +143,20 @@ def preprocess(text):
     return final if final.strip() else cleaned
 
 # ══════════════════════════════════════════════════════════
-# RULE-BASED ENGINE (Layer 1)
+# RULE-BASED ENGINE (Layer 1) — unchanged
 # ══════════════════════════════════════════════════════════
 
 CONFIDENCE_THRESHOLD = 0.30
 
 RULES = [
-    # ── VP/Director — MOST SPECIFIC FIRST ────────────────
     {
         "pattern": r"\b(md\b|managing\s*director|vice\s*principal"
                    r"|vp\b|chairman"
                    r"|director\s*number|md\s*contact"
                    r"|head\s*of\s*college|college\s*director"
                    r"|director\s*padmashree|padmashree\s*md)\b",
-        "tag": "VP_director",
-        "response": None
+        "tag": "VP_director", "response": None
     },
-
-    # ── Contact ───────────────────────────────────────────
     {
         "pattern": r"(\+977|4112252|4112403"
                    r"|phone\s*number|contact\s*number"
@@ -170,8 +165,6 @@ RULES = [
         "tag": "contact",
         "response": "Phone: +977-1-4112252 / +977-1-4112403\n www.padmashreecollege.edu.np"
     },
-
-    # ── Location ──────────────────────────────────────────
     {
         "pattern": r"(gpo\s*box|google\s*map"
                    r"|how\s*to\s*reach\s*college"
@@ -182,8 +175,6 @@ RULES = [
         "tag": "location",
         "response": " Padmashree College, Tinkune, Kathmandu, Nepal. (GPO Box: 15252)"
     },
-
-    # ── Website ───────────────────────────────────────────
     {
         "pattern": r"(padmashreecollege\.edu\.np"
                    r"|official\s*website|college\s*website"
@@ -192,8 +183,6 @@ RULES = [
         "tag": "website",
         "response": " Official website: www.padmashreecollege.edu.np"
     },
-
-    # ── Ragging ───────────────────────────────────────────
     {
         "pattern": r"\b(ragging|anti.?ragging"
                    r"|zero\s*tolerance"
@@ -203,8 +192,6 @@ RULES = [
         "tag": "ragging",
         "response": " Padmashree has ZERO TOLERANCE against ragging."
     },
-
-    # ── Greeting ──────────────────────────────────────────
     {
         "pattern": r"^(hi|hello|hey|yo|namaste|namaskar|sanchai"
                    r"|good\s*morning|good\s*afternoon|good\s*evening"
@@ -212,8 +199,6 @@ RULES = [
         "tag": "greeting",
         "response": "Hello! Welcome to Padmashree College  How can I help you today?"
     },
-
-    # ── Goodbye — BEFORE thanks ───────────────────────────
     {
         "pattern": r"\b(bye|goodbye|cya|see\s*you|take\s*care"
                    r"|ok\s*bye|baii|later|good\s*night"
@@ -221,8 +206,6 @@ RULES = [
         "tag": "goodbye",
         "response": "Goodbye! Best of luck! "
     },
-
-    # ── Thanks ────────────────────────────────────────────
     {
         "pattern": r"\b(thank\s*you|thanks|dhanyabad|shukriya"
                    r"|thnx|thx|that\s*helped"
@@ -230,52 +213,40 @@ RULES = [
         "tag": "thanks",
         "response": "You're welcome! Feel free to ask anything "
     },
-
-    # ── Office Hours ──────────────────────────────────────
     {
         "pattern": r"\b(office\s*timing|office\s*timings|office\s*hours"
                    r"|opening\s*time|closing\s*time|college\s*hours"
                    r"|when\s*open|office\s*open|working\s*hours"
                    r"|what\s*time\s*open|college\s*timing"
                    r"|what\s*are\s*the\s*timings|timings\b)\b",
-        "tag": "hours",
-        "response": None
+        "tag": "hours", "response": None
     },
-
-    # ── Programs Offered ──────────────────────────────────
     {
         "pattern": r"\b(all\s*courses|courses\s*available|courses\s*offered"
                    r"|all\s*programs|programs\s*available|programs\s*offered"
                    r"|what\s*courses|which\s*courses|list\s*of\s*courses"
                    r"|list\s*of\s*programs|what\s*programs)\b",
-        "tag": "programs_offered",
-        "response": None
+        "tag": "programs_offered", "response": None
     },
-
-    # ── Fees ──────────────────────────────────────────────
     {
         "pattern": r"\b(fee\s*structure|semester\s*fee|total\s*fee"
                    r"|annual\s*fee|fees\s*kati|how\s*much\s*fee"
                    r"|tuition\s*fee|fees\s*details"
                    r"|fees\s*information|yearly\s*fees)\b",
-        "tag": "fees",
-        "response": None
+        "tag": "fees", "response": None
     },
-
-    # ── Admission ─────────────────────────────────────────
     {
         "pattern": r"\b(how\s*to\s*apply|admission\s*process"
                    r"|admission\s*open|enrollment\s*process"
                    r"|how\s*to\s*enroll|get\s*admission"
                    r"|admission\s*procedure|intake\s*open"
                    r"|how\s*can\s*i\s*apply|apply\s*to\s*padmashree)\b",
-        "tag": "admission",
-        "response": None
+        "tag": "admission", "response": None
     },
 ]
 
 # ══════════════════════════════════════════════════════════
-# HYBRID ENGINE FUNCTIONS
+# HYBRID ENGINE — updated for Keras
 # ══════════════════════════════════════════════════════════
 
 def rule_based_match(user_input, intents_data):
@@ -306,7 +277,7 @@ def log_failed_query(user_input, response, confidence, method,
     except Exception:
         pass
 
-def get_response(user_input, model, le, intents_data, threshold=None):
+def get_response(user_input, intents_data, threshold=None):
     if threshold is None:
         threshold = CONFIDENCE_THRESHOLD
 
@@ -316,15 +287,17 @@ def get_response(user_input, model, le, intents_data, threshold=None):
         return {"response": rule_response, "intent": rule_tag,
                 "confidence": 1.0, "method": "rule-based"}
 
-    # Layer 2 — Naive Bayes
+    # Layer 2 — Keras Neural Network
     processed = preprocess(user_input)
     if not processed.strip():
         return {"response": "Could you rephrase that?",
                 "intent": "unknown", "confidence": 0.0, "method": "fallback"}
 
-    proba = model.predict_proba([processed])[0]
-    best  = int(np.argmax(proba))
-    conf  = float(proba[best])
+    # Vectorize → predict
+    vec   = vectorizer.transform([processed]).toarray()          # TF-IDF
+    probs = keras_model.predict(vec, verbose=0)[0]               # Keras predict
+    best  = int(np.argmax(probs))
+    conf  = float(probs[best])
     tag   = le.inverse_transform([best])[0]
 
     # Layer 3 — Confidence Gate
@@ -332,14 +305,14 @@ def get_response(user_input, model, le, intents_data, threshold=None):
         return {"response": "I'm not sure about that. Could you rephrase, or call us at +977-1-4112252?",
                 "intent": tag, "confidence": conf, "method": "fallback"}
 
-    # Fetch from intents.json
+    # Fetch response from intents.json
     for intent in intents_data["intents"]:
         if intent["tag"] == tag and intent.get("responses"):
             return {"response": random.choice(intent["responses"]),
-                    "intent": tag, "confidence": conf, "method": "naive-bayes"}
+                    "intent": tag, "confidence": conf, "method": "keras"}
 
     return {"response": "Intent found but no response configured.",
-            "intent": tag, "confidence": conf, "method": "naive-bayes"}
+            "intent": tag, "confidence": conf, "method": "keras"}
 
 # ══════════════════════════════════════════════════════════
 # FLASK ROUTES
@@ -354,7 +327,7 @@ def health():
     return jsonify({
         "status":  "running",
         "intents": len(intents_data["intents"]),
-        "model":   "Naive Bayes + Rule-Based Hybrid"
+        "model":   "Keras Neural Network + Rule-Based Hybrid"  # ← updated
     })
 
 @app.route("/chat", methods=["POST"])
@@ -366,26 +339,24 @@ def chat():
         if not msg:
             return jsonify({"success": False, "response": "Please type something!"})
 
-        # ─── DEBUG: Log incoming message ─────────────────────────────────
         print("\n" + "─"*60)
         print(f"USER MESSAGE: {msg}")
         print("─"*60)
 
-        result = get_response(msg, model, le, intents_data)
+        result = get_response(msg, intents_data)   # ← removed model, le params
 
-        # ─── DEBUG: Log bot response details ─────────────────────────────
         print(f"BOT RESPONSE  : {result['response']}")
         print(f"INTENT        : {result['intent']}")
         print(f"CONFIDENCE    : {result['confidence']:.3f} ({result['confidence']*100:.1f}%)")
         print(f"METHOD        : {result['method'].upper()}")
-        
+
         if result["method"] == "fallback":
-            print(f"FALLBACK LOGGED to fallback_queries.json")
+            print("FALLBACK LOGGED to fallback_queries.json")
             log_failed_query(msg, result["response"],
-                           result["confidence"],
-                           result["method"],
-                           result["intent"])
-        
+                             result["confidence"],
+                             result["method"],
+                             result["intent"])
+
         print("─"*60 + "\n")
 
         return jsonify({
